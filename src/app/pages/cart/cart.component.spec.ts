@@ -31,6 +31,8 @@ const listBook: Book[] = [
     },
 ];
 
+const listBookEmpty: Book[] = [];
+
 describe('Cart component', () => {
 
     let component: CartComponent;
@@ -186,6 +188,16 @@ describe('Cart component', () => {
         expect(component.listCartBook.length === 0).toBeTrue();
         expect(spy1).toHaveBeenCalled();
         expect(spy2).toHaveBeenCalled();
+    });
+
+    it('onClearBooks() with an emty list, show a console log', () => {
+        const spy1 = spyOn(console, 'log');
+
+        component.listCartBook = listBookEmpty;
+        component.onClearBooks();
+
+        expect(component.listCartBook.length === 0).toBeTrue();
+        expect(spy1).toHaveBeenCalledWith('No books available');
     });
 
     //OP2: NO CORRECTO: Probar un metodo privado directamente:

@@ -31,11 +31,21 @@ const listBook: Book[] = [
 ];
 
 const book: Book = {
+    id: '1',
     name: '',
     author: '',
     isbn: '',
     price: 15,
     amount: 2,
+}
+
+const book2: Book = {
+    id: '2',
+    name: '',
+    author: '',
+    isbn: '',
+    price: 10,
+    amount: 1,
 }
 
 describe('BookService', () => {
@@ -130,7 +140,50 @@ describe('BookService', () => {
         //anado otro libro -> objeto de otro test
         // service.addBookToCart(book);
         // listBook = service.getBooksFromCart();
-        // expect(listBook.length).toBe(1);
+        // expect(listBook.length).toBe(2);
+
+        expect(spy1).toHaveBeenCalled();
+    });
+
+    it('addBookToCart() add a book sucessfully when the list exist in the localStorage', () => {
+        //creo un espia para similar el metodo _toastSuccess
+        //.and.callFake porque no quiero que se llame
+        const toast = {
+            fire: () => null
+        } as any;
+        const spy1 = spyOn(swal, 'mixin').and.callFake(() => {
+            return toast;
+        });
+
+        let listBook = service.getBooksFromCart();
+        //anado dos libros
+        service.addBookToCart(book);
+        service.addBookToCart(book2);
+
+        listBook = service.getBooksFromCart();
+        expect(listBook.length).toBe(2);
+
+        expect(spy1).toHaveBeenCalled();
+    });
+
+    it('addBookToCart() add a book the amount should increase', () => {
+        //creo un espia para similar el metodo _toastSuccess
+        //.and.callFake porque no quiero que se llame
+        const toast = {
+            fire: () => null
+        } as any;
+        const spy1 = spyOn(swal, 'mixin').and.callFake(() => {
+            return toast;
+        });
+
+        let listBook = service.getBooksFromCart();
+        //anado tres libros iguales
+        service.addBookToCart(book2);
+        service.addBookToCart(book2);
+        service.addBookToCart(book2);
+
+        listBook = service.getBooksFromCart();
+        expect(listBook[0].amount).toBe(3);
 
         expect(spy1).toHaveBeenCalled();
     });
@@ -143,7 +196,7 @@ describe('BookService', () => {
 
         //segundo borro la lista de libros de cart
         service.removeBooksFromCart();
-        listBook = service.getBooksFromCart()
+        listBook = service.getBooksFromCart();
         expect(listBook.length).toBe(0);
     })
 })
